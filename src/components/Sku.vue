@@ -20,7 +20,7 @@
              <el-row type="flex" justify="start">
                <el-tag
                  :key="tag"
-                 v-for="tag in dynamicTags"
+                 v-for="tag in domain.sku"
                  closable
                  :disable-transitions="false"
                  @close="handleClose(tag)"
@@ -32,7 +32,7 @@
                <el-input
                  class="input-new-tag"
                  v-if="inputVisible"
-                 v-model="inputValue"
+                 v-model="domain.inputValue"
                  ref="saveTagInput"
                  size="small"
                  @keyup.enter.native="handleInputConfirm"
@@ -55,12 +55,14 @@
   export default {
     data() {
       return {
-         clickTag: '-1',
+         clickTag: -1,
          specChecked:false,
          addNum: 0,
          form: {
            domains: [{
+             inputValue:'',
              value: '',
+             sku:[]
            },
           ],
          },
@@ -74,8 +76,10 @@
       addSku() {
          if (this.addNum <= 1) {
            this.form.domains.push({
+             inputValue:'',
              value: '',
              key: Date.now(),
+             sku:[]
            });
 
            //this.dynamicTags.push({value:'123'})
@@ -96,9 +100,15 @@
         },
 
       handleInputConfirm() {
-        let inputValue = this.inputValue;
+
+        let inputValue = this.form.domains;
         if (inputValue) {
-          this.dynamicTags.push(inputValue);
+          for (var i = 0; i < this.form.domains.length; i++) {
+            if (this.clickTag = i) {
+              console.log( JSON.stringify(this.form.domains[i].inputValue, null, 4));
+              this.form.domains.sku.push(this.form.domains[i].inputValue);
+            }
+          }
         }
         this.inputVisible = false;
         this.inputValue = '';
