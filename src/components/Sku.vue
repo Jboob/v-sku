@@ -24,7 +24,6 @@
                  closable
                  :disable-transitions="false"
                  @close="handleClose(domain.sku,tag)"
-                 :hit="true"
                  size="medium"
                  >
                  {{tag}}
@@ -40,6 +39,18 @@
                  >
                </el-input>
                <el-button v-else class="button-new-tag" icon="el-icon-plus" size="small" @click="showInput(index)">添加属性</el-button>
+             </el-row>
+             <el-row v-if="index <= 0 " type="flex" justify="start">
+               <el-upload
+                action="https://jsonplaceholder.typicode.com/posts/"
+                list-type="picture-card"
+                :on-preview="handlePictureCardPreview"
+                :on-remove="handleRemove">
+                <i class="el-icon-plus"></i>
+              </el-upload>
+              <el-dialog :visible.sync="dialogVisible">
+                <img width="100%" :src="dialogImageUrl" alt="">
+              </el-dialog>
              </el-row>
          </el-form-item>
          <el-button v-if="this.addNum <= 1"  @click="addSku" icon="el-icon-plus" type="primary" round>新增规格</el-button>
@@ -161,6 +172,8 @@
     padding: 10px 0;
     background-color: #f9fafc;
   }
+
+
   .el-tag + .el-tag {
     margin-left: 10px;
   }
@@ -175,5 +188,29 @@
     width: 90px;
     margin-left: 10px;
     vertical-align: bottom;
+  }
+
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+  }
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
   }
 </style>
