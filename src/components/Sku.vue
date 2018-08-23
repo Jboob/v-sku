@@ -20,10 +20,10 @@
              <el-row type="flex" justify="start">
                <el-tag
                  :key="tag"
-                 v-for="tag in domain.sku"
+                 v-for="(tag, key) in domain.sku"
                  closable
                  :disable-transitions="false"
-                 @close="handleClose(tag)"
+                 @close="handleClose(domain.sku,tag)"
                  :hit="true"
                  size="medium"
                  >
@@ -31,7 +31,7 @@
                </el-tag>
                <el-input
                  class="input-new-tag"
-                 v-if="inputVisible"
+                 v-if="domain.inputVisible"
                  v-model="domain.inputValue"
                  ref="saveTagInput"
                  size="small"
@@ -61,6 +61,7 @@
          form: {
            domains: [{
              inputValue:'',
+             inputVisible: false,
              value: '',
              sku:[]
            },
@@ -76,42 +77,44 @@
       addSku() {
          if (this.addNum <= 1) {
            this.form.domains.push({
+             inputVisible: false,
              inputValue:'',
              value: '',
              key: Date.now(),
              sku:[]
            });
-
-           //this.dynamicTags.push({value:'123'})
          }
          this.addNum = this.addNum + 1;
         },
-        handleClose(tag) {
-          this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
+        handleClose(sku,tag) {
+          sku.splice(sku.indexOf(tag), 1);
         },
         showInput(tag) {
           this.clickTag = tag;
           console.log( JSON.stringify(this.clickTag, null, 4));
-          console.log( JSON.stringify(this.dynamicTags, null, 4));
-          this.inputVisible = true;
-          this.$nextTick(_ => {
-            this.$refs.saveTagInput.$refs.input.focus();
-          });
+          console.log( JSON.stringify(this.form.domains, null, 4));
+          for (var i = 0; i < this.form.domains.length; i++) {
+            if (this.clickTag == i) {
+              let domain = this.form.domains[i];
+              domain.inputVisible = true;
+            }
+          }
         },
 
       handleInputConfirm() {
-
-        let inputValue = this.form.domains;
-        if (inputValue) {
           for (var i = 0; i < this.form.domains.length; i++) {
-            if (this.clickTag = i) {
-              console.log( JSON.stringify(this.form.domains[i].inputValue, null, 4));
-              this.form.domains.sku.push(this.form.domains[i].inputValue);
+              console.log(this.clickTag +"=====" +i);
+            if (this.clickTag == i) {
+              let domain = this.form.domains[i];
+              let inputValue = domain.inputValue;
+              if(inputValue){
+                console.log( JSON.stringify(inputValue, null, 4));
+                domain.sku.push(inputValue);
+                domain.inputValue = '';
+                domain.inputVisible = false;
+              }
             }
           }
-        }
-        this.inputVisible = false;
-        this.inputValue = '';
       },
       handleCheck(value){
        console.log("check:"+value);
