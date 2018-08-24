@@ -17,41 +17,50 @@
                 </v-if>
                 <el-checkbox style="margin-left:10px" v-if="index == 0" @change="handleCheck" v-model="specChecked">添加规格图片</el-checkbox>
             </el-row>
-             <el-row type="flex" justify="start">
-               <el-tag
-                 :key="tag"
-                 v-for="(tag, key) in domain.sku"
-                 closable
-                 :disable-transitions="false"
-                 @close="handleClose(domain.sku,tag)"
-                 size="medium"
-                 >
-                 {{tag}}
-               </el-tag>
-               <el-input
-                 class="input-new-tag"
-                 v-if="domain.inputVisible"
-                 v-model="domain.inputValue"
-                 ref="saveTagInput"
-                 size="small"
-                 @keyup.enter.native="handleInputConfirm"
-                 @blur="handleInputConfirm"
-                 >
-               </el-input>
-               <el-button v-else class="button-new-tag" icon="el-icon-plus" size="small" @click="showInput(index)">添加属性</el-button>
-             </el-row>
-             <el-row v-if="index <= 0 " type="flex" justify="start">
-               <el-upload
-                action="https://jsonplaceholder.typicode.com/posts/"
-                list-type="picture-card"
-                :on-preview="handlePictureCardPreview"
-                :on-remove="handleRemove">
-                <i class="el-icon-plus"></i>
-              </el-upload>
-              <el-dialog :visible.sync="dialogVisible">
-                <img width="100%" :src="dialogImageUrl" alt="">
-              </el-dialog>
-             </el-row>
+            <div>
+              <el-row type="flex" justify="start">
+                <el-tag
+                  :key="tag"
+                  type="success"
+                  v-for="(tag, key) in domain.sku"
+                  closable
+                  :disable-transitions="false"
+                  @close="handleClose(domain.sku,tag)"
+                  size="medium"
+                  >
+                  {{tag}}
+                </el-tag>
+                <el-input
+                  class="input-new-tag"
+                  v-if="domain.inputVisible"
+                  v-model="domain.inputValue"
+                  ref="saveTagInput"
+                  size="small"
+                  @keyup.enter.native="handleInputConfirm"
+                  @blur="handleInputConfirm"
+                  >
+                </el-input>
+                <el-button v-else class="button-new-tag" icon="el-icon-plus" size="small" @click="showInput(index)">添加属性</el-button>
+              </el-row>
+              <el-row v-if="index <= 0 " type="flex" justify="start">
+                <el-upload
+                 class="el-upload"
+                 action="api/file/uploadCollageGoodsImage"
+                 :data="formCollection"
+                 list-type="picture-card"
+                 :on-preview="handlePictureCardPreview"
+                 :on-remove="handleRemove">
+                 <i class="el-icon-plus avatar-uploader-icon" ></i>
+               </el-upload>
+               <el-dialog :visible.sync="dialogVisible">
+                 <img width="100%" :src="dialogImageUrl" alt="">
+               </el-dialog>
+              </el-row>
+            </div>
+
+
+
+
          </el-form-item>
          <el-button v-if="this.addNum <= 1"  @click="addSku" icon="el-icon-plus" type="primary" round>新增规格</el-button>
        </el-form>
@@ -81,7 +90,10 @@
          input3:"",
          dynamicTags: [],
          inputVisible: false,
-         inputValue: ''
+         inputValue: '',
+         dialogImageUrl: '',
+        dialogVisible: false
+
       }
     },
     methods: {
@@ -142,6 +154,13 @@
          }
        }
      },
+     handleRemove(file, fileList) {
+        console.log(file, fileList);
+      },
+      handlePictureCardPreview(file) {
+        this.dialogImageUrl = file.url;
+        this.dialogVisible = true;
+      }
     }
   }
 </script>
@@ -203,14 +222,34 @@
   .avatar-uploader-icon {
     font-size: 28px;
     color: #8c939d;
-    width: 178px;
-    height: 178px;
-    line-height: 178px;
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+  }
+  .el-upload--picture-card{
+    width: 50px;
+    height: 50px;
+    line-height:0px;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
     text-align: center;
   }
   .avatar {
-    width: 178px;
-    height: 178px;
+    width: 78px;
+    height: 78px;
     display: block;
+    text-align: center;
   }
+
+  .el-upload-list--picture-card .el-upload-list__item{
+    width: 80px;
+    height: 80px;
+  }
+
 </style>
